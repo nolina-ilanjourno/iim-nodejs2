@@ -38,7 +38,7 @@ app.put("/users/:id", (req, res) => {
   const id = req.params.id;
   const body = req.body;
 
-  const user = users.find((user) => user.id === parseInt(id));
+  let user = users.find((user) => user.id === parseInt(id));
 
   if (user === undefined) {
     return res.status(404).send("User not found");
