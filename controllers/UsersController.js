@@ -1,6 +1,12 @@
 const prisma = require("../config/prisma");
+const { hashPassword } = require("../utils/bcrypt");
 
 class UsersController {
+  async getMyProfile(req, res) {
+    const user = req.user;
+    return res.status(200).send(user);
+  }
+
   // app.get (/users)
   async index(req, res) {
     const users = await prisma.user.findMany();
@@ -12,7 +18,11 @@ class UsersController {
     try {
       const body = req.body;
       const user = await prisma.user.create({
-        data: body,
+        data: {
+          name: body.name,
+          email: body.email,
+          password: await hashPassword(body.password),
+        },
       });
       return res.status(201).send(user);
     } catch (e) {
